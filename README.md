@@ -1,0 +1,4 @@
+mage
+====
+
+Just another game
