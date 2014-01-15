@@ -25,9 +25,10 @@
 
 #include "Renderer.h"
 #include "Logger.h"
+#include "Babel.h"
 
 Renderer::Renderer(sf::VideoMode videoMode) {
-	window = new sf::RenderWindow(videoMode, "The Mage Project", sf::Style::None);
+	window = new sf::RenderWindow(videoMode, Babel::get("game.name"), sf::Style::Close);
 }
 
 void Renderer::addObject(sf::Drawable* object, unsigned int layer) {

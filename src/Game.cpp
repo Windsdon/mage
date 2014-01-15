@@ -25,10 +25,11 @@
 
 #include "Game.h"
 #include "Logger.h"
+#include "Language.h"
+#include "Babel.h"
 
 Game::Game()
-		: renderer(sf::VideoMode::getDesktopMode()), running(false), intro(NULL), state(State::Intro) {
-
+		: renderer(sf::VideoMode(1280, 720)), running(false), intro(NULL), state(State::Intro) {
 }
 
 void Game::run(){
@@ -45,6 +46,10 @@ void Game::run(){
 	renderer.addLayer("background");
 
 	renderer.addObject(intro, 0);
+
+	Babel::addLanguage(*(new Language("lang/en.lang")));
+
+	renderer.getWindow()->setTitle(Babel::get("game.name"));
 
 	while(running){
 		loop();
