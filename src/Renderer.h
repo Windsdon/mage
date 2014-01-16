@@ -27,6 +27,7 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "World.h"
 
 class RenderingLayer {
 	public:
@@ -64,6 +65,7 @@ class Renderer {
 		Renderer(sf::VideoMode);
 
 		void addObject(sf::Drawable *object, unsigned int layer);
+		void setWorld(World *world, unsigned int layer);
 		void removeObject(sf::Drawable *object, unsigned int layer);
 		void removeObject(sf::Drawable *object);
 		int addLayer(const std::string &name);
@@ -72,9 +74,15 @@ class Renderer {
 		void render() const;
 		sf::RenderWindow* getWindow() const;
 
+		sf::FloatRect &getCamera();
+
 	private:
 		sf::RenderWindow *window;
 		std::vector<RenderingLayer*> layers;
+
+		World *world;
+		unsigned int worldLayer;
+		sf::FloatRect camera;
 
 };
 

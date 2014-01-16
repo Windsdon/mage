@@ -1,7 +1,7 @@
 /*
- * Game.h
+ * TileStone.cpp
  *
- *  Created on: 14/01/2014
+ *  Created on: 16/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -23,49 +23,5 @@
  *
  */
 
-#include "World.h"
-#include "Renderer.h"
-#include "Intro.h"
-#include "LoadingScreen.h"
-
-class Game {
-	public:
-		/*
-		 * Creates the game instance and starts it
-		 */
-		Game();
-
-		void run();
-
-		enum class State {
-			Intro,
-			Loading,
-			Menu,
-			Running
-		};
-
-	private:
-
-		void loop();
-
-		void load();
-
-		void randomizeWorld();
-
-		/*
-		 * The currently loaded level
-		 */
-		World *world;
-		Renderer renderer;
-		bool running;
-
-		Intro *intro;
-		LoadingScreen *loadingScreen;
-
-		sf::Font font;
-
-		State state;
-
-
-};
+#include "TileStone.h"
 

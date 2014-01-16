@@ -27,7 +27,7 @@
 #include "Logger.h"
 #include "Babel.h"
 
-Renderer::Renderer(sf::VideoMode videoMode) {
+Renderer::Renderer(sf::VideoMode videoMode): world(NULL), worldLayer(0) {
 	window = new sf::RenderWindow(videoMode, Babel::get("game.name"), sf::Style::Close);
 }
 
@@ -80,10 +80,18 @@ void Renderer::render() const {
 		}
 		if ((*it)->isActive()) {
 			(*it)->render(window);
+			if((*it)->getNumber() == worldLayer && world != NULL){
+				world->draw(*window, camera);
+			}
 		}
 	}
 
 	window->display();
+}
+
+void Renderer::setWorld(World* world, unsigned int layer) {
+	this->world = world;
+	this->worldLayer = layer;
 }
 
 sf::RenderWindow* Renderer::getWindow() const {
@@ -134,4 +142,11 @@ bool RenderingLayer::isActive() const {
 
 void RenderingLayer::setActive(bool active) {
 	this->active = active;
+}
+
+void RenderingLayer::setName(const std::string& name) {
+}
+
+sf::FloatRect &Renderer::getCamera() {
+	return camera;
 }

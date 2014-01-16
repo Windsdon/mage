@@ -1,7 +1,7 @@
 /*
- * Game.h
+ * TileStone.h
  *
- *  Created on: 14/01/2014
+ *  Created on: 16/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -23,49 +23,25 @@
  *
  */
 
-#include "World.h"
-#include "Renderer.h"
-#include "Intro.h"
-#include "LoadingScreen.h"
+#pragma once
 
-class Game {
+#include "Tile.h"
+
+/*
+ *
+ */
+class TileStone: public Tile {
 	public:
-		/*
-		 * Creates the game instance and starts it
-		 */
-		Game();
+		TileStone(int width, int height, int x, int y, unsigned long data, TileSheet *sheet)
+				: Tile(width, height, x, y, data, sheet) {
+		}
 
-		void run();
+		virtual bool isAlwaysTop() const {
+			return false;
+		}
 
-		enum class State {
-			Intro,
-			Loading,
-			Menu,
-			Running
-		};
-
-	private:
-
-		void loop();
-
-		void load();
-
-		void randomizeWorld();
-
-		/*
-		 * The currently loaded level
-		 */
-		World *world;
-		Renderer renderer;
-		bool running;
-
-		Intro *intro;
-		LoadingScreen *loadingScreen;
-
-		sf::Font font;
-
-		State state;
-
-
+		virtual int getTileId() const {
+			return 1;
+		}
 };
 

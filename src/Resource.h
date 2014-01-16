@@ -32,7 +32,7 @@ using namespace std;
 class Resource {
 	public:
 		enum class Type {
-			Texture, Sound, Image
+			Texture, Sound, Image, TileSheet
 		};
 
 		Resource(const string id, const string file);

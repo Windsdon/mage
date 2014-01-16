@@ -1,7 +1,7 @@
 /*
- * Game.h
+ * TileSheet.h
  *
- *  Created on: 14/01/2014
+ *  Created on: 16/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -23,49 +23,35 @@
  *
  */
 
-#include "World.h"
-#include "Renderer.h"
-#include "Intro.h"
-#include "LoadingScreen.h"
+#pragma once
 
-class Game {
+#include "Resource.h"
+#include "ResourceImage.h"
+#include <SFML/Graphics.hpp>
+
+class TileSheet: public Resource {
 	public:
-		/*
-		 * Creates the game instance and starts it
-		 */
-		Game();
+		TileSheet(const string id, const string imageId, int tileSize);
+		TileSheet(const string id, const string imageId);
+		virtual ~TileSheet();
 
-		void run();
+		virtual void load();
+		virtual bool isLoaded() const;
+		virtual Resource::Type getType() const;
 
-		enum class State {
-			Intro,
-			Loading,
-			Menu,
-			Running
-		};
+		const sf::Texture *getTexture(int offset) const;
+		int getSize() const;
+
+		const sf::Texture *operator[](int offset) const;
+
+		int getTileSize() const {
+			return tileSize;
+		}
 
 	private:
-
-		void loop();
-
-		void load();
-
-		void randomizeWorld();
-
-		/*
-		 * The currently loaded level
-		 */
-		World *world;
-		Renderer renderer;
-		bool running;
-
-		Intro *intro;
-		LoadingScreen *loadingScreen;
-
-		sf::Font font;
-
-		State state;
-
+		vector<sf::Texture*> textures;
+		int tileSize;
+		bool loaded;
 
 };
 

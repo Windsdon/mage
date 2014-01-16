@@ -26,6 +26,7 @@
 #pragma once
 
 #include "Entity.h"
+#include "Tile.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
 
@@ -40,8 +41,22 @@ class World {
 		/*
 		 * Creates a blank world, with neither tiles nor entities
 		 */
-		World();
+		explicit World(int tileSize);
 		~World();
+
+		/*
+		 * The size of this world, in tiles
+		 */
+		void setSize(unsigned int width, unsigned int height);
+
+		void setTileAt(unsigned int tileX, unsigned int tileY, Tile* tile);
+
+		void setTile(Tile* tile);
+
+		/*
+		 * This will recreate the internal layers to fit the new size
+		 */
+		void setViewSize(unsigned int width, unsigned int height);
 
 		/*
 		 * Updates every entity and tiles
@@ -60,10 +75,26 @@ class World {
 		/*
 		 * Draws visible entities and tiles
 		 */
-		void draw(sf::RenderTarget&, sf::View&) const;
+		void draw(sf::RenderTarget&, const sf::FloatRect&);
+
+		int getHeight() const {
+			return height;
+		}
+		
+		int getWidth() const {
+			return width;
+		}
 
 	private:
 		World(World&);
 		vector<Entity*> entities;
+		vector<vector<Tile*> > tiles;
+
+		sf::RenderTexture backgroundLayer;
+		sf::RenderTexture foregroundLayer;
+
+		int tileSize;
+		int width;
+		int height;
 };
 
