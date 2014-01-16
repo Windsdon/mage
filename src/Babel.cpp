@@ -41,13 +41,13 @@ const string& Babel::get(const string& id) {
 	const string *str;
 
 	if(defaultLanguage == NULL){
-		return fallbackString;
+		return id;
 	}
 
 	if(!defaultLanguage->get(id, str)){
 		Logger::getInstance().log("Could not find string " + id);
 
-		return fallbackString;
+		return id;
 	}
 
 	return *str;
