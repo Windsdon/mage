@@ -29,14 +29,18 @@
 
 using namespace std;
 
-
 class Resource {
 	public:
+		enum class Type {
+			Texture, Sound, Image
+		};
+
 		Resource(const string id, const string file);
 		virtual ~Resource();
 
 		virtual void load() = 0;
 		virtual bool isLoaded() const = 0;
+		virtual Type getType() const = 0;
 
 		const string getId() const;
 		const string getFile() const;

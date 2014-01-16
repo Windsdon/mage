@@ -33,6 +33,10 @@ ResourceImage::ResourceImage(const string id, const string file): Resource(id, f
 ResourceImage::~ResourceImage() {
 }
 
+Resource::Type ResourceImage::getType() const{
+	return Resource::Type::Image;
+}
+
 void ResourceImage::load() {
 	loaded = loadFromFile(getFile());
 

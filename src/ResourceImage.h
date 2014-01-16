@@ -38,6 +38,7 @@ class ResourceImage: public Resource, public sf::Image {
 
 		virtual void load();
 		virtual bool isLoaded() const;
+		virtual Resource::Type getType() const;
 
 	private:
 		bool loaded;
