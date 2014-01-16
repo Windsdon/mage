@@ -26,6 +26,7 @@
 #include "World.h"
 #include "Renderer.h"
 #include "Intro.h"
+#include "LoadingScreen.h"
 
 class Game {
 	public:
@@ -47,6 +48,8 @@ class Game {
 
 		void loop();
 
+		void load();
+
 		/*
 		 * The currently loaded level
 		 */
@@ -55,6 +58,9 @@ class Game {
 		bool running;
 
 		Intro *intro;
+		LoadingScreen *loadingScreen;
+
+		sf::Font font;
 
 		State state;
 

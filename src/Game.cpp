@@ -27,6 +27,9 @@
 #include "Logger.h"
 #include "Language.h"
 #include "Babel.h"
+#include "ResourceLoader.h"
+#include "ResourceImage.h"
+#include "ResourceTexture.h"
 
 Game::Game()
 		: renderer(sf::VideoMode(1280, 720)), running(false), intro(NULL), state(State::Intro) {
@@ -38,12 +41,16 @@ void Game::run(){
 	ResourceImage logo("windsdonLogo", "res/logo.png");
 	ResourceImage splash("splash", "res/splash.png");
 
+	font.loadFromFile("res/ARIAL.TTF");
+
 	logo.load();
 	splash.load();
 
 	intro = new Intro(&logo, &splash);
 
 	renderer.addLayer("background");
+	renderer.addLayer("game");
+	renderer.addLayer("gui");
 
 	renderer.addObject(intro, 0);
 
@@ -75,8 +82,39 @@ void Game::loop(){
 		if(intro->isComplete()){
 			renderer.removeObject(intro, 0);
 			state = State::Loading;
+
+			loadingScreen = new LoadingScreen(font, font);
+
+			renderer.addObject(loadingScreen, 0);
+
+			load();
 		}
 	}
 
+	if(state == State::Loading){
+		double complete = ResourceLoader::getCompletion();
+		loadingScreen->setCompletion(complete);
+
+		if(complete == 1){
+			state = State::Menu;
+
+			renderer.removeObject(loadingScreen, 0);
+
+			renderer.addObject(new sf::Sprite(*static_cast<ResourceTexture*>(ResourceLoader::get("texture.gui.menuBackground"))), 0);
+		}
+	}
+
+
+
 	renderer.render();
+}
+
+void Game::load(){
+	ResourceList list;
+	list.push_back(new ResourceImage("image.gui.menuBackground", "res/gui/menuBackground.png"));
+	list.push_back(new ResourceTexture("texture.gui.menuBackground", "image.gui.menuBackground"));
+
+	ResourceLoader::queue(list);
+
+	ResourceLoader::loadThread();
 }
