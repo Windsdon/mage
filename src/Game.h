@@ -27,6 +27,7 @@
 #include "Renderer.h"
 #include "Intro.h"
 #include "LoadingScreen.h"
+#include "Player.h"
 
 class Game {
 	public:
@@ -63,6 +64,8 @@ class Game {
 		LoadingScreen *loadingScreen;
 
 		sf::Font font;
+
+		Player *player;
 
 		State state;
 

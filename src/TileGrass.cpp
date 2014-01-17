@@ -1,7 +1,7 @@
 /*
- * Entity.h
+ * TileGrass.cpp
  *
- *  Created on: 14/01/2014
+ *  Created on: 16/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -23,37 +23,5 @@
  *
  */
 
-#pragma once
-
-#include <SFML/Graphics/Drawable.hpp>
-#include "PhysicsObject.h"
-
-class World;
-class Entity: public sf::Drawable, public PhysicsObject {
-	public:
-		Entity(World*, float x, float y, float width, float height);
-		virtual ~Entity();
-
-		virtual const sf::FloatRect &getCollisionBox() const;
-		virtual void moveDelta(float dx, float dy);
-		virtual bool isFixed() const;
-
-		/*
-		 * Called every world tick
-		 */
-		virtual void onUpdate(float) = 0;
-
-		/*
-		 * Notifies the World that this entity should not be updated anymore.
-		 * Should always be called by derived classes.
-		 */
-		virtual void onDestory();
-
-	protected:
-		sf::FloatRect cb;
-
-	private:
-		World *world;
-
-};
+#include "TileGrass.h"
 

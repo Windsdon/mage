@@ -1,7 +1,7 @@
 /*
- * Entity.h
+ * Player.cpp
  *
- *  Created on: 14/01/2014
+ *  Created on: 17/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -23,37 +23,14 @@
  *
  */
 
-#pragma once
+#include "Player.h"
 
-#include <SFML/Graphics/Drawable.hpp>
-#include "PhysicsObject.h"
+Player::Player(World* world, float x, float y, float width, float height, TileSheet* sheet): Mob(world, x, y, width, height, sheet) {
+	mass = 10;
+	friction = 100;
 
-class World;
-class Entity: public sf::Drawable, public PhysicsObject {
-	public:
-		Entity(World*, float x, float y, float width, float height);
-		virtual ~Entity();
-
-		virtual const sf::FloatRect &getCollisionBox() const;
-		virtual void moveDelta(float dx, float dy);
-		virtual bool isFixed() const;
-
-		/*
-		 * Called every world tick
-		 */
-		virtual void onUpdate(float) = 0;
-
-		/*
-		 * Notifies the World that this entity should not be updated anymore.
-		 * Should always be called by derived classes.
-		 */
-		virtual void onDestory();
-
-	protected:
-		sf::FloatRect cb;
-
-	private:
-		World *world;
-
-};
-
+	cb.width /= 3;
+	cb.height -= 50;
+	cb.top += 50;
+	cb.left += width/6;
+}

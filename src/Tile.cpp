@@ -41,6 +41,10 @@ Tile::Tile(int width, int height, int x, int y, unsigned long data, TileSheet *s
 	sprite.setScale(((float) width) / sheet->getTileSize(), ((float) height) / sheet->getTileSize());
 	sprite.setOrigin(sheet->getTileSize() / 2.0, sheet->getTileSize() / 2.0);
 	sprite.setPosition(x * width + width/2.0, y * height + height/2.0);
+
+	friction = 0;
+	mass = 0;
+
 	update();
 }
 
@@ -55,8 +59,6 @@ void Tile::setData(unsigned long data) {
 
 bool Tile::update() {
 	updateScheduled = false;
-
-	cout << "offset: " << getOffset() << " rotation: " << getRotation() << endl;
 
 	sprite.setTexture(*(sheet->getTexture(getOffset())), true);
 	sprite.rotate(90 * (getRotation() % 4));

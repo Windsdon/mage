@@ -28,9 +28,22 @@
 
 class PhysicsObject {
 	public:
-		virtual ~PhysicsObject();
+		virtual ~PhysicsObject() {};
 
+		/*
+		 * The collision box, in world coordinates
+		 */
 		virtual const sf::FloatRect &getCollisionBox() const = 0;
+		virtual void moveDelta(float dx, float dy) = 0;
+		virtual bool isFixed() const = 0;
+
+		sf::Vector2f velocity;
+		sf::Vector2f acceleration;
+		sf::Vector2f direction;
+		sf::Vector2f force;
+		sf::Vector2f ds;
+		float mass;
+		float friction;
 
 };
 

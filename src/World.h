@@ -77,11 +77,11 @@ class World {
 		 */
 		void draw(sf::RenderTarget&, const sf::FloatRect&);
 
-		int getHeight() const {
+		unsigned int getHeight() const {
 			return height;
 		}
 		
-		int getWidth() const {
+		unsigned int getWidth() const {
 			return width;
 		}
 
@@ -89,12 +89,15 @@ class World {
 		World(World&);
 		vector<Entity*> entities;
 		vector<vector<Tile*> > tiles;
+		vector<PhysicsObject*> physicsObjects;
 
 		sf::RenderTexture backgroundLayer;
 		sf::RenderTexture foregroundLayer;
 
+		sf::Clock timer;
+
 		int tileSize;
-		int width;
-		int height;
+		unsigned int width;
+		unsigned int height;
 };
 

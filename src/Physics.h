@@ -1,7 +1,7 @@
 /*
- * Entity.h
+ * Physics.h
  *
- *  Created on: 14/01/2014
+ *  Created on: 17/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -24,36 +24,24 @@
  */
 
 #pragma once
-
-#include <SFML/Graphics/Drawable.hpp>
 #include "PhysicsObject.h"
+#include <vector>
 
-class World;
-class Entity: public sf::Drawable, public PhysicsObject {
+using namespace std;
+
+
+/*
+ *
+ */
+class Physics {
 	public:
-		Entity(World*, float x, float y, float width, float height);
-		virtual ~Entity();
+		static void calculate(vector<PhysicsObject*> &list, float dt);
+		static float vecSize(sf::Vector2f &v);
+		static float vecSize2(sf::Vector2f &v);
+		static sf::Vector2f normalize(sf::Vector2f &v);
+		static sf::Vector2f getCentre(sf::FloatRect &r);
+		static float accInt(float a, float v, float dt);
 
-		virtual const sf::FloatRect &getCollisionBox() const;
-		virtual void moveDelta(float dx, float dy);
-		virtual bool isFixed() const;
-
-		/*
-		 * Called every world tick
-		 */
-		virtual void onUpdate(float) = 0;
-
-		/*
-		 * Notifies the World that this entity should not be updated anymore.
-		 * Should always be called by derived classes.
-		 */
-		virtual void onDestory();
-
-	protected:
-		sf::FloatRect cb;
-
-	private:
-		World *world;
-
+		static const float RepulsionCoef;
 };
 

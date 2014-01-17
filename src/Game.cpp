@@ -32,6 +32,8 @@
 #include "ResourceTexture.h"
 #include "TileSheet.h"
 #include "TileStone.h"
+#include "TileGrass.h"
+#include "Mob.h"
 
 Game::Game()
 		: renderer(sf::VideoMode(1280, 720)), running(false), intro(NULL), state(State::Intro) {
@@ -117,13 +119,29 @@ void Game::loop() {
 
 			randomizeWorld();
 
+			player = new Player(world, 100, 100, 64, 64, static_cast<TileSheet*>(ResourceLoader::get("tilesheet.mob.player")));
+
+			world->addEntity(player);
+
 			renderer.setWorld(world, 1);
 
 		}
 	}
 
 	if (state == State::Running) {
-
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+			player->force += sf::Vector2f(0, -10000);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+			player->force += sf::Vector2f(-10000, 0);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+			player->force += sf::Vector2f(0, 10000);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+			player->force += sf::Vector2f(10000, 0);
+		}
+		world->tick();
 	}
 
 	renderer.render();
@@ -133,8 +151,12 @@ void Game::load() {
 	ResourceList list;
 	list.push_back(new ResourceImage("image.gui.menuBackground", "res/gui/menuBackground.png"));
 	list.push_back(new ResourceTexture("texture.gui.menuBackground", "image.gui.menuBackground"));
-	list.push_back(new ResourceImage("image.tile.test", "res/tile/test.png"));
-	list.push_back(new TileSheet("tilesheet.tile.test", "image.tile.test"));
+	list.push_back(new ResourceImage("image.tile.stone", "res/tile/stone.png"));
+	list.push_back(new ResourceImage("image.tile.grass", "res/tile/grass.png"));
+	list.push_back(new ResourceImage("image.mob.player", "res/mob/hero.png"));
+	list.push_back(new TileSheet("tilesheet.tile.stone", "image.tile.stone"));
+	list.push_back(new TileSheet("tilesheet.tile.grass", "image.tile.grass"));
+	list.push_back(new TileSheet("tilesheet.mob.player", "image.mob.player"));
 
 	ResourceLoader::queue(list);
 
@@ -142,11 +164,20 @@ void Game::load() {
 }
 
 void Game::randomizeWorld() {
-	TileSheet *tex = static_cast<TileSheet*>(ResourceLoader::get("tilesheet.tile.test"));
+	TileSheet *stoneTex = static_cast<TileSheet*>(ResourceLoader::get("tilesheet.tile.stone"));
+	TileSheet *grassTex = static_cast<TileSheet*>(ResourceLoader::get("tilesheet.tile.grass"));
 
-	for (int i = 0; i < world->getWidth(); i++) {
-		for (int j = 0; j < world->getHeight(); j++) {
-			world->setTile(new TileStone(32, 32, i, j, (rand() % 3 << 8), tex));
+	for (unsigned int i = 0; i < world->getWidth(); i++) {
+		for (unsigned int j = 0; j < world->getHeight(); j++) {
+			if (false) {
+				world->setTile(new TileStone(32, 32, i, j, (rand() % 3 << 8), stoneTex));
+			} else {
+				world->setTile(new TileGrass(32, 32, i, j, (rand() % 3 << 8) + rand() % 3, grassTex));
+			}
 		}
+	}
+
+	for (int i = 0; i < 20; i++) {
+		world->addEntity(new Player(world, rand() % 700 + 40, rand() % 700 + 40, 64, 64, static_cast<TileSheet*>(ResourceLoader::get("tilesheet.mob.player"))));
 	}
 }

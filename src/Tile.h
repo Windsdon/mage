@@ -57,20 +57,6 @@ class Tile: public sf::Drawable, public PhysicsObject {
 
 		virtual bool isAlwaysTop() const = 0;
 
-		/*struct DataMask {
-				unsigned offset :4;
-				bool extendN :1;
-				bool extendS :1;
-				bool extendE :1;
-				bool extendW :1;
-				unsigned rotation :2;
-		};
-
-		union Data {
-				DataMask mask;
-				unsigned long data;
-		};*/
-
 		enum ExtendDirection {
 				North,
 				South,
@@ -93,6 +79,13 @@ class Tile: public sf::Drawable, public PhysicsObject {
 
 		virtual const sf::FloatRect &getCollisionBox() const {
 			return cb;
+		}
+
+		virtual void moveDelta(float dx, float dy){
+			return;
+		}
+		virtual bool isFixed() const{
+			return true;
 		}
 
 	private:

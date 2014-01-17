@@ -26,8 +26,12 @@
 #include <iostream>
 #include "Logger.h"
 #include "Game.h"
+#include <math.h>
+#include <ctime>
 
 int main(int argc, char **argv) {
+	srand(time(NULL));
+
 	Logger::getInstance().log("Mage - Copyright (c) 2014 Windsdon");
 	Logger::getInstance().log("Creating instance...");
 

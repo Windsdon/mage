@@ -25,6 +25,7 @@
 
 #include "World.h"
 #include "Logger.h"
+#include "Physics.h"
 #include <algorithm>
 
 World::World(int tileSize)
@@ -33,6 +34,9 @@ World::World(int tileSize)
 }
 
 void World::tick() {
+	float time = timer.restart().asSeconds();
+
+	Physics::calculate(physicsObjects, time);
 
 }
 
@@ -52,6 +56,7 @@ bool World::hasEntity(Entity* e, vector<Entity*>::iterator *p = NULL) {
 void World::addEntity(Entity* e) {
 	if (!hasEntity(e)) {
 		entities.push_back(e);
+		physicsObjects.push_back(e);
 	} else {
 		LogEntry entry(Logger::Severity::WARNING, "Tried to added entity already in list", "World");
 		Logger::getInstance().log(entry);
@@ -93,8 +98,7 @@ void World::setTileAt(unsigned int tileX, unsigned int tileY, Tile* tile) {
 			delete oldTile;
 		}
 		tiles[tileY][tileX] = tile;
-
-		cout << "Tile at " << tileX << ", " << tileY << " is now " << tiles[tileY][tileX] << endl;
+		//physicsObjects.push_back(tile);
 	}
 }
 
@@ -147,11 +151,18 @@ void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 
 	// entities should be sorted in back to front order
 	for (vector<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it) {
-		target.draw(**it);
+		sf::FloatRect cb = (*it)->getCollisionBox();
+		/*sf::RectangleShape rect(sf::Vector2f(cb.width, cb.height));
+		rect.setFillColor(sf::Color::Transparent);
+		rect.setOutlineColor(sf::Color::Red);
+		rect.setOutlineThickness(3.0f);
+		rect.setPosition(cb.left, cb.top);*/
+
+		target.draw(**it, rs);
 	}
 
 	sf::Sprite fgSprite(foregroundLayer.getTexture());
-	target.draw(bgSprite);
+	target.draw(fgSprite);
 
 }
 

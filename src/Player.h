@@ -1,7 +1,7 @@
 /*
- * PhysicsObject.cpp
+ * Player.h
  *
- *  Created on: 16/01/2014
+ *  Created on: 17/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -23,7 +23,15 @@
  *
  */
 
-#include "PhysicsObject.h"
+#pragma once
 
-PhysicsObject::~PhysicsObject() {
-}
+#include "Mob.h"
+
+/*
+ *
+ */
+class Player: public Mob {
+	public:
+		Player(World *world, float x, float y, float width, float height, TileSheet *sheet);
+};
+

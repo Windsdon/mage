@@ -1,7 +1,7 @@
 /*
- * Entity.h
+ * Mob.h
  *
- *  Created on: 14/01/2014
+ *  Created on: 17/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -25,35 +25,26 @@
 
 #pragma once
 
-#include <SFML/Graphics/Drawable.hpp>
-#include "PhysicsObject.h"
+#include "Entity.h"
+#include "TileSheet.h"
+#include "World.h"
+#include <SFML/Graphics.hpp>
 
-class World;
-class Entity: public sf::Drawable, public PhysicsObject {
+/*
+ *
+ */
+class Mob: public Entity {
 	public:
-		Entity(World*, float x, float y, float width, float height);
-		virtual ~Entity();
+		Mob(World *world, float x, float y, float width, float height, TileSheet *sheet);
 
-		virtual const sf::FloatRect &getCollisionBox() const;
+		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 		virtual void moveDelta(float dx, float dy);
-		virtual bool isFixed() const;
 
-		/*
-		 * Called every world tick
-		 */
-		virtual void onUpdate(float) = 0;
-
-		/*
-		 * Notifies the World that this entity should not be updated anymore.
-		 * Should always be called by derived classes.
-		 */
-		virtual void onDestory();
-
-	protected:
-		sf::FloatRect cb;
+		virtual void onUpdate(float dt);
 
 	private:
-		World *world;
-
+		unsigned int frame;
+		sf::Sprite sprite;
+		TileSheet *sheet;
 };
 
