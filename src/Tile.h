@@ -57,10 +57,6 @@ class Tile: public sf::Drawable, public PhysicsObject {
 
 		virtual bool isAlwaysTop() const = 0;
 
-		virtual bool hasCollision() const {
-			return false;
-		}
-
 		enum ExtendDirection {
 				North,
 				South,
@@ -117,7 +113,6 @@ class Tile: public sf::Drawable, public PhysicsObject {
 
 		sf::Sprite sprite;
 
-	protected:
 		sf::FloatRect cb;
 };
 

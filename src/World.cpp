@@ -38,10 +38,6 @@ void World::tick() {
 
 	Physics::calculate(physicsObjects, time);
 
-	for (vector<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it) {
-		(*it)->force = sf::Vector2f(0, 0);
-	}
-
 }
 
 bool World::hasEntity(Entity* e, vector<Entity*>::iterator *p = NULL) {
@@ -85,7 +81,7 @@ void World::setSize(unsigned int width, unsigned int height) {
 		tiles.push_back(*(new vector<Tile*>()));
 	}
 
-	for (vector<vector<Tile*> >::iterator it = tiles.begin(); it != tiles.end(); ++it) {
+	for(vector<vector<Tile*> >::iterator it = tiles.begin(); it != tiles.end(); ++it){
 		(*it).resize(width);
 		fill((*it).begin(), (*it).end(), static_cast<Tile*>(NULL));
 	}
@@ -102,9 +98,7 @@ void World::setTileAt(unsigned int tileX, unsigned int tileY, Tile* tile) {
 			delete oldTile;
 		}
 		tiles[tileY][tileX] = tile;
-		if (tile->hasCollision()) {
-			physicsObjects.push_back(tile);
-		}
+		//physicsObjects.push_back(tile);
 	}
 }
 
@@ -137,7 +131,7 @@ void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 		for (vector<Tile*>::iterator itx = tilex.begin() + startx; itx != tilex.begin() + endx; ++itx) {
 			Tile *tile = *itx;
 
-			if (tile == NULL) {
+			if(tile == NULL){
 				continue;
 			}
 			if (tile->isAlwaysTop()) {
@@ -158,14 +152,13 @@ void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 	// entities should be sorted in back to front order
 	for (vector<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it) {
 		sf::FloatRect cb = (*it)->getCollisionBox();
-		sf::RectangleShape rect(sf::Vector2f(cb.width, cb.height));
-		 rect.setFillColor(sf::Color::Transparent);
-		 rect.setOutlineColor(sf::Color::Red);
-		 rect.setOutlineThickness(1.0f);
-		 rect.setPosition(cb.left, cb.top);
+		/*sf::RectangleShape rect(sf::Vector2f(cb.width, cb.height));
+		rect.setFillColor(sf::Color::Transparent);
+		rect.setOutlineColor(sf::Color::Red);
+		rect.setOutlineThickness(3.0f);
+		rect.setPosition(cb.left, cb.top);*/
 
 		target.draw(**it, rs);
-		target.draw(rect, rs);
 	}
 
 	sf::Sprite fgSprite(foregroundLayer.getTexture());

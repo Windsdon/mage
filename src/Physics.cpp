@@ -25,10 +25,10 @@
 
 #include "Physics.h"
 #include <iostream>
-#include <cmath>
 using namespace std;
 
-const float Physics::RepulsionCoef = 3000.0f;
+
+const float Physics::RepulsionCoef = 10000.0f;
 
 /*
  * this function assumes that there is no residual forces from last iteration
@@ -49,7 +49,7 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 		for (vector<PhysicsObject*>::iterator it2 = list.begin(); it2 != list.end(); ++it2) {
 			PhysicsObject *o2 = *it2;
 
-			if (o1 == o2 || o2->isFixed()) {
+			if (o1 == o2) {
 				continue;
 			}
 
@@ -68,7 +68,10 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 
 		}
 
-		o1->force += -o1->friction * o1->velocity * vecSize(o1->velocity);
+		sf::Vector2f vn = normalize(o1->velocity);
+		sf::Vector2f friction = o1->friction * vn * vecSize(o1->velocity);
+
+		o1->force -= friction;
 
 		//calculate acceleration
 		o1->acceleration = o1->force / o1->mass;
@@ -77,25 +80,12 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 		o1->ds.x = accInt(o1->acceleration.x, o1->velocity.x, dt);
 		o1->ds.y = accInt(o1->acceleration.y, o1->velocity.y, dt);
 
-		//cout << "a: " << o1->acceleration.x << ", " << o1->acceleration.y << endl;
-
 		//calculate velocity
-		o1->velocity += (o1->acceleration * dt);
-
-		//apply friction
-		//float friction = (1 - o1->friction) * pow(dt, 2) * vecSize2(o1->velocity);
-		//cout << friction << endl;
-		//o1->velocity -= o1->velocity * friction;
-
-		/*if (abs(o1->velocity.x) < o1->friction) {
-		 o1->velocity.x = 0;
-		 }
-
-		 if (abs(o1->velocity.y) < o1->friction) {
-		 o1->velocity.y = 0;
-		 }*/
+		o1->velocity = o1->acceleration * dt;
 
 	}
+
+
 
 	//now that we updated all the objects, we can calculate the collisions with fixed objects
 	for (vector<PhysicsObject*>::iterator it = list.begin(); it != list.end(); ++it) {
@@ -104,76 +94,8 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 		if (o1->isFixed()) {
 			continue;
 		}
-		//float mov = 1;
 
-		sf::FloatRect r1;		// = o1->getCollisionBox();
-
-		//shift the collision box
-		//r1.left += o1->ds.x;
-		//r1.top += o1->ds.y;
-
-		sf::Vector2f d = o1->ds;
-
-		bool collidesX = false, collidesY = false;
-
-		for (vector<PhysicsObject*>::iterator it2 = list.begin(); it2 != list.end(); ++it2) {
-			PhysicsObject *o2 = *it2;
-
-			if (o1 == o2 || !o2->isFixed()) {
-				continue;
-			}
-
-			sf::FloatRect r2 = o2->getCollisionBox();
-
-			/*
-			 * Check x and y collisions separately
-			 */
-
-			float extra;
-
-			r1 = o1->getCollisionBox();
-			r1.left += d.x;
-			if (r1.intersects(r2)) {
-				collidesX = true;
-				if (d.x > 0) {
-					extra = r1.left + r1.width - r2.left;
-					d.x -= extra;
-				} else {
-					extra = r1.left - r2.left - r2.width;
-					d.x -= extra;
-				}
-			}
-
-			r1 = o1->getCollisionBox();
-			r1.top += d.y;
-
-			if (r1.intersects(r2)) {
-				collidesY = true;
-				if (d.y > 0) {
-					extra = r1.top + r1.height - r2.top;
-					d.y -= extra;
-				} else {
-					extra = r1.top - r2.top - r2.height;
-					d.y -= extra;
-				}
-			}
-
-		}
-
-		if (collidesX) {
-			o1->velocity.x = 0;
-		}
-
-		if (collidesY) {
-			o1->velocity.y = 0;
-		}
-
-		/*if(mov < 1){
-		 o1->velocity = sf::Vector2f(0, 0);
-		 cout << mov << endl;
-		 }*/
-
-		o1->moveDelta(d.x, d.y);
+		o1->moveDelta(o1->ds.x, o1->ds.y);
 	}
 }
 
@@ -200,44 +122,4 @@ sf::Vector2f Physics::getCentre(sf::FloatRect &r) {
 
 float Physics::accInt(float a, float v, float dt) {
 	return (v * dt + 0.5f * a * pow(dt, 2));
-}
-
-bool Physics::lineIntersect(sf::Vector2f p0, sf::Vector2f p1, sf::Vector2f q0, sf::Vector2f q1, float &sr) {
-	sf::Vector2f u = p1 - p0;
-	sf::Vector2f v = q1 - q0;
-
-	float det = (u.x * v.y - u.y * v.x);
-
-	if (det == 0) {
-		return false;
-	}
-
-	float s = ((p0.y - q0.y) * v.x + (q0.x - p0.x) * v.y) / det;
-	float t = ((q0.x - p0.x) * u.y + (p0.y - q0.y) * u.x) / det;
-
-	if (s <= 0 || s >= 1 || t <= 0 || t >= 1) {
-		return false;
-	}
-
-	sr = s;
-
-	return true;
-}
-
-sf::Vector2f Physics::getPoint(sf::FloatRect& rect, int i) {
-	switch (i) {
-		case 0:
-			return sf::Vector2f(rect.left, rect.top);
-
-		case 1:
-			return sf::Vector2f(rect.left + rect.width, rect.top);
-
-		case 2:
-			return sf::Vector2f(rect.left + rect.width, rect.top + rect.height);
-
-		case 3:
-			return sf::Vector2f(rect.left, rect.top + rect.height);
-	}
-
-	return sf::Vector2f();
 }

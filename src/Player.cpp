@@ -26,11 +26,11 @@
 #include "Player.h"
 
 Player::Player(World* world, float x, float y, float width, float height, TileSheet* sheet): Mob(world, x, y, width, height, sheet) {
-	mass = 1;
-	friction = 0.5;
+	mass = 10;
+	friction = 100;
 
 	cb.width /= 3;
 	cb.height -= 50;
 	cb.top += 50;
-	cb.left += width/3;
+	cb.left += width/6;
 }

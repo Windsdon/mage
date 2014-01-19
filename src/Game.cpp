@@ -45,7 +45,7 @@ void Game::run() {
 	ResourceImage logo("windsdonLogo", "res/logo.png");
 	ResourceImage splash("splash", "res/splash.png");
 
-	font.loadFromFile("res/visitor1.ttf");
+	font.loadFromFile("res/ARIAL.TTF");
 
 	logo.load();
 	splash.load();
@@ -129,28 +129,18 @@ void Game::loop() {
 	}
 
 	if (state == State::Running) {
-		player->force = sf::Vector2f(0, 0);
-
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-			player->force += sf::Vector2f(0, -3000);
+			player->force += sf::Vector2f(0, -10000);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-			player->force += sf::Vector2f(-3000, 0);
+			player->force += sf::Vector2f(-10000, 0);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-			player->force += sf::Vector2f(0, 3000);
+			player->force += sf::Vector2f(0, 10000);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-			player->force += sf::Vector2f(3000, 0);
+			player->force += sf::Vector2f(10000, 0);
 		}
-
-		if (player->force.x == 0) {
-			player->velocity.x = 0;
-		}
-		if (player->force.y == 0) {
-			player->velocity.y = 0;
-		}
-
 		world->tick();
 	}
 
@@ -179,7 +169,7 @@ void Game::randomizeWorld() {
 
 	for (unsigned int i = 0; i < world->getWidth(); i++) {
 		for (unsigned int j = 0; j < world->getHeight(); j++) {
-			if (!(rand() % 20)) {
+			if (false) {
 				world->setTile(new TileStone(32, 32, i, j, (rand() % 3 << 8), stoneTex));
 			} else {
 				world->setTile(new TileGrass(32, 32, i, j, (rand() % 3 << 8) + rand() % 3, grassTex));
