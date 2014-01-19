@@ -25,8 +25,9 @@
 
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "DepthOrderable.h"
 
-class PhysicsObject {
+class PhysicsObject: public DepthOrderable {
 	public:
 		virtual ~PhysicsObject() {};
 
@@ -34,6 +35,7 @@ class PhysicsObject {
 		 * The collision box, in world coordinates
 		 */
 		virtual const sf::FloatRect &getCollisionBox() const = 0;
+		virtual float getDepth() const {return (getCollisionBox().top + getCollisionBox().height);};
 		virtual void moveDelta(float dx, float dy) = 0;
 		virtual bool isFixed() const = 0;
 

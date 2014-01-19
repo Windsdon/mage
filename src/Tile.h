@@ -31,7 +31,7 @@
 /*
  *
  */
-class Tile: public sf::Drawable, public PhysicsObject {
+class Tile: public PhysicsObject {
 	public:
 		Tile(int width, int height, int x, int y, unsigned long data, TileSheet *sheet);
 

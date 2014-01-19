@@ -1,7 +1,7 @@
 /*
- * Entity.h
+ * DepthOrderable.h
  *
- *  Created on: 14/01/2014
+ *  Created on: 19/01/2014
  *      Author: Windsdon
  *  
  *   mage
@@ -25,35 +25,17 @@
 
 #pragma once
 
-#include <SFML/Graphics/Drawable.hpp>
-#include "PhysicsObject.h"
+#include <SFML/Graphics.hpp>
 
-class World;
-class Entity: public PhysicsObject {
+class DepthOrderable: public sf::Drawable {
 	public:
-		Entity(World*, float x, float y, float width, float height);
-		virtual ~Entity();
+		virtual ~DepthOrderable() {
+		}
 
-		virtual const sf::FloatRect &getCollisionBox() const;
-		virtual void moveDelta(float dx, float dy);
-		virtual bool isFixed() const;
+		virtual float getDepth() const = 0;
 
-		/*
-		 * Called every world tick
-		 */
-		virtual void onUpdate(float) = 0;
-
-		/*
-		 * Notifies the World that this entity should not be updated anymore.
-		 * Should always be called by derived classes.
-		 */
-		virtual void onDestory();
-
-	protected:
-		sf::FloatRect cb;
-
-	private:
-		World *world;
-
+		static bool order(DepthOrderable* i, DepthOrderable* j) {
+			return (i->getDepth() < j->getDepth());
+		}
 };
 

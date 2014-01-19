@@ -26,6 +26,7 @@
 #include "World.h"
 #include "Logger.h"
 #include "Physics.h"
+#include "DepthOrderable.h"
 #include <algorithm>
 
 World::World(int tileSize)
@@ -38,9 +39,12 @@ void World::tick() {
 
 	Physics::calculate(physicsObjects, time);
 
-	for (vector<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it) {
-		(*it)->force = sf::Vector2f(0, 0);
+	for (vector<PhysicsObject*>::iterator it = physicsObjects.begin(); it != physicsObjects.end(); ++it) {
+		(*it)->force = sf::Vector2f(0, 0); //reset force
 	}
+
+	//order all entities and fixed foreground tiles
+	sort(physicsObjects.begin(), physicsObjects.end(), &DepthOrderable::order);
 
 }
 
@@ -137,7 +141,7 @@ void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 		for (vector<Tile*>::iterator itx = tilex.begin() + startx; itx != tilex.begin() + endx; ++itx) {
 			Tile *tile = *itx;
 
-			if (tile == NULL) {
+			if (tile == NULL || tile->hasCollision()) {
 				continue;
 			}
 			if (tile->isAlwaysTop()) {
@@ -156,13 +160,13 @@ void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 	target.draw(bgSprite);
 
 	// entities should be sorted in back to front order
-	for (vector<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it) {
+	for (vector<PhysicsObject*>::iterator it = physicsObjects.begin(); it != physicsObjects.end(); ++it) {
 		sf::FloatRect cb = (*it)->getCollisionBox();
 		sf::RectangleShape rect(sf::Vector2f(cb.width, cb.height));
-		 rect.setFillColor(sf::Color::Transparent);
-		 rect.setOutlineColor(sf::Color::Red);
-		 rect.setOutlineThickness(1.0f);
-		 rect.setPosition(cb.left, cb.top);
+		rect.setFillColor(sf::Color::Transparent);
+		rect.setOutlineColor(sf::Color::Red);
+		rect.setOutlineThickness(1.0f);
+		rect.setPosition(cb.left, cb.top);
 
 		target.draw(**it, rs);
 		target.draw(rect, rs);
