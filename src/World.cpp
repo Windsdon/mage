@@ -121,6 +121,10 @@ void World::setViewSize(unsigned int width, unsigned int height) {
 	foregroundLayer.create(width, height, false);
 }
 
+void World::addPhysicsObject(PhysicsObject* object) {
+	physicsObjects.push_back(object);
+}
+
 void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 	backgroundLayer.clear(sf::Color::Transparent);
 	foregroundLayer.clear(sf::Color::Transparent);
@@ -161,15 +165,15 @@ void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 
 	// entities should be sorted in back to front order
 	for (vector<PhysicsObject*>::iterator it = physicsObjects.begin(); it != physicsObjects.end(); ++it) {
-		sf::FloatRect cb = (*it)->getCollisionBox();
+		/*sf::FloatRect cb = (*it)->getCollisionBox();
 		sf::RectangleShape rect(sf::Vector2f(cb.width, cb.height));
 		rect.setFillColor(sf::Color::Transparent);
 		rect.setOutlineColor(sf::Color::Red);
 		rect.setOutlineThickness(1.0f);
-		rect.setPosition(cb.left, cb.top);
+		rect.setPosition(cb.left, cb.top);*/
 
 		target.draw(**it, rs);
-		target.draw(rect, rs);
+		//target.draw(rect, rs);
 	}
 
 	sf::Sprite fgSprite(foregroundLayer.getTexture());

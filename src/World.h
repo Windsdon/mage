@@ -72,6 +72,8 @@ class World {
 
 		bool hasEntity(Entity*, vector<Entity*>::iterator*);
 
+		void addPhysicsObject(PhysicsObject*);
+
 		/*
 		 * Draws visible entities and tiles
 		 */

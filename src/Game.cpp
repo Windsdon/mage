@@ -34,6 +34,7 @@
 #include "TileStone.h"
 #include "TileGrass.h"
 #include "Mob.h"
+#include "InvisibleWall.h"
 
 Game::Game()
 		: renderer(sf::VideoMode(1280, 720)), running(false), intro(NULL), state(State::Intro) {
@@ -186,6 +187,11 @@ void Game::randomizeWorld() {
 			}
 		}
 	}
+
+	world->addPhysicsObject(new InvisibleWall(0, 0, 32, world->getHeight() * 32));
+	world->addPhysicsObject(new InvisibleWall(0, 0, 32 * world->getWidth(), 32));
+	world->addPhysicsObject(new InvisibleWall(world->getWidth() * 32 - 32, 0, 32, world->getHeight() * 32));
+	world->addPhysicsObject(new InvisibleWall(0, world->getHeight()*32 - 32, 32 * world->getWidth(), 32));
 
 	for (int i = 0; i < 20; i++) {
 		world->addEntity(new Player(world, rand() % 700 + 40, rand() % 700 + 40, 64, 64, static_cast<TileSheet*>(ResourceLoader::get("tilesheet.mob.player"))));

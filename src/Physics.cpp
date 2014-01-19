@@ -29,6 +29,7 @@
 using namespace std;
 
 const float Physics::RepulsionCoef = 3000.0f;
+const float Physics::MaximumTimeStep =  0.01f;
 
 /*
  * this function assumes that there is no residual forces from last iteration
@@ -37,32 +38,49 @@ const float Physics::RepulsionCoef = 3000.0f;
  * Friction is calculated here.
  */
 void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
-	for (vector<PhysicsObject*>::iterator it = list.begin(); it != list.end(); ++it) {
-		PhysicsObject *o1 = *it;
+	while(dt > Physics::MaximumTimeStep){
+		dt -= Physics::MaximumTimeStep;
+		calculate(list, Physics::MaximumTimeStep);
+	}
+	PhysicsObject *o1;
+	sf::FloatRect r1;
+	PhysicsObject *o2;
+	sf::FloatRect r2;
+
+	sf::Vector2f v;
+	sf::Vector2f o1c;
+	sf::Vector2f o2c;
+	sf::Vector2f d;
+
+	vector<PhysicsObject*>::iterator it;
+	vector<PhysicsObject*>::iterator it2;
+
+	for (it = list.begin(); it != list.end(); ++it) {
+		o1 = *it;
 
 		if (o1->isFixed() || o1->mass <= 0) {
 			continue;
 		}
 
-		sf::FloatRect r1 = o1->getCollisionBox();
+		r1 = o1->getCollisionBox();
 
-		for (vector<PhysicsObject*>::iterator it2 = list.begin(); it2 != list.end(); ++it2) {
-			PhysicsObject *o2 = *it2;
+		for (it2 = list.begin(); it2 != list.end(); ++it2) {
+			o2 = *it2;
 
 			if (o1 == o2 || o2->isFixed()) {
 				continue;
 			}
 
-			sf::FloatRect r2 = o2->getCollisionBox();
+			r2 = o2->getCollisionBox();
 
 			if (!r1.intersects(r2)) {
 				continue;
 			}
 
-			sf::Vector2f o1c = getCentre(r1);
-			sf::Vector2f o2c = getCentre(r2);
+			o1c = getCentre(r1);
+			o2c = getCentre(r2);
 
-			sf::Vector2f v = o1c - o2c;
+			v = o1c - o2c;
 
 			o1->force += normalize(v) * RepulsionCoef;
 
@@ -77,53 +95,31 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 		o1->ds.x = accInt(o1->acceleration.x, o1->velocity.x, dt);
 		o1->ds.y = accInt(o1->acceleration.y, o1->velocity.y, dt);
 
-		//cout << "a: " << o1->acceleration.x << ", " << o1->acceleration.y << endl;
-
 		//calculate velocity
 		o1->velocity += (o1->acceleration * dt);
-
-		//apply friction
-		//float friction = (1 - o1->friction) * pow(dt, 2) * vecSize2(o1->velocity);
-		//cout << friction << endl;
-		//o1->velocity -= o1->velocity * friction;
-
-		/*if (abs(o1->velocity.x) < o1->friction) {
-		 o1->velocity.x = 0;
-		 }
-
-		 if (abs(o1->velocity.y) < o1->friction) {
-		 o1->velocity.y = 0;
-		 }*/
 
 	}
 
 	//now that we updated all the objects, we can calculate the collisions with fixed objects
-	for (vector<PhysicsObject*>::iterator it = list.begin(); it != list.end(); ++it) {
-		PhysicsObject *o1 = *it;
+	for (it = list.begin(); it != list.end(); ++it) {
+		o1 = *it;
 
 		if (o1->isFixed()) {
 			continue;
 		}
-		//float mov = 1;
 
-		sf::FloatRect r1;		// = o1->getCollisionBox();
-
-		//shift the collision box
-		//r1.left += o1->ds.x;
-		//r1.top += o1->ds.y;
-
-		sf::Vector2f d = o1->ds;
+		d = o1->ds;
 
 		bool collidesX = false, collidesY = false;
 
-		for (vector<PhysicsObject*>::iterator it2 = list.begin(); it2 != list.end(); ++it2) {
-			PhysicsObject *o2 = *it2;
+		for (it2 = list.begin(); it2 != list.end(); ++it2) {
+			o2 = *it2;
 
 			if (o1 == o2 || !o2->isFixed()) {
 				continue;
 			}
 
-			sf::FloatRect r2 = o2->getCollisionBox();
+			r2 = o2->getCollisionBox();
 
 			/*
 			 * Check x and y collisions separately
@@ -167,11 +163,6 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 		if (collidesY) {
 			o1->velocity.y = 0;
 		}
-
-		/*if(mov < 1){
-		 o1->velocity = sf::Vector2f(0, 0);
-		 cout << mov << endl;
-		 }*/
 
 		o1->moveDelta(d.x, d.y);
 	}
