@@ -34,6 +34,10 @@ class TileStone: public Tile {
 	public:
 		TileStone(int width, int height, int x, int y, unsigned long data, TileSheet *sheet)
 				: Tile(width, height, x, y, data, sheet) {
+			cb.left = x * width;
+			cb.top = y * height;
+			cb.width = width;
+			cb.height = height;
 		}
 
 		virtual bool isAlwaysTop() const {
@@ -43,5 +47,10 @@ class TileStone: public Tile {
 		virtual int getTileId() const {
 			return 1;
 		}
+
+		virtual bool hasCollision() const {
+			return true;
+		}
+
 };
 
