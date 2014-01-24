@@ -143,7 +143,7 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 			r1 = o1->getCollisionBox();
 			r1.top += d.y;
 
-			if (r1.intersects(r2) && abs(r1.left + r1.width - r2.left) > 0.002) {
+			if (r1.intersects(r2) && abs(r1.left + r1.width - r2.left) > 0.005) {
 				collidesY = true;
 				if (d.y > 0) {
 					extra = r1.top + r1.height - r2.top;
