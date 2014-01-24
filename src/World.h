@@ -86,6 +86,18 @@ class World {
 		unsigned int getWidth() const {
 			return width;
 		}
+		
+		unsigned int getPixelHeight() const {
+			return height * tileSize;
+		}
+
+		unsigned int getPixelWidth() const {
+			return width * tileSize;
+		}
+
+		int getTileSize() const {
+			return tileSize;
+		}
 
 	private:
 		World(World&);

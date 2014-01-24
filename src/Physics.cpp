@@ -185,7 +185,7 @@ sf::Vector2f Physics::normalize(sf::Vector2f &v) {
 	return (v / size);
 }
 
-sf::Vector2f Physics::getCentre(sf::FloatRect &r) {
+sf::Vector2f Physics::getCentre(const sf::FloatRect &r) {
 	return sf::Vector2f(r.left + r.width / 2, r.top + r.height / 2);
 }
 

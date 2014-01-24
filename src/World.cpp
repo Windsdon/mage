@@ -130,15 +130,20 @@ void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 	foregroundLayer.clear(sf::Color::Transparent);
 
 	sf::Transform tr;
-	sf::Vector2f top(view.left, view.top);
+	sf::Vector2f top(-view.left, -view.top);
 
 	tr.translate(top);
 	sf::RenderStates rs(tr);
 
-	int startx = view.left / tileSize;
-	int endx = startx + (view.width) / tileSize + 1;
-	int starty = view.top / tileSize;
-	int endy = starty + (view.height) / tileSize + 1;
+	int startx = floor(view.left / ((float) tileSize));
+	int endx = startx + ceil((view.width) / ((float) tileSize)) + 1;
+	int starty = floor(view.top / ((float) tileSize));
+	int endy = starty + ceil((view.height) / ((float) tileSize)) + 1;
+
+	startx = (startx < 0 ? 0 : startx);
+	starty = (starty < 0 ? 0 : starty);
+	endx = (endx >= width ? width : endx);
+	endy = (endy >= height ? height : endy);
 
 	for (vector<vector<Tile*> >::iterator ity = tiles.begin() + starty; ity != tiles.begin() + endy; ++ity) {
 		vector<Tile*> tilex = *ity;
@@ -166,11 +171,11 @@ void World::draw(sf::RenderTarget& target, const sf::FloatRect& view) {
 	// entities should be sorted in back to front order
 	for (vector<PhysicsObject*>::iterator it = physicsObjects.begin(); it != physicsObjects.end(); ++it) {
 		/*sf::FloatRect cb = (*it)->getCollisionBox();
-		sf::RectangleShape rect(sf::Vector2f(cb.width, cb.height));
-		rect.setFillColor(sf::Color::Transparent);
-		rect.setOutlineColor(sf::Color::Red);
-		rect.setOutlineThickness(1.0f);
-		rect.setPosition(cb.left, cb.top);*/
+		 sf::RectangleShape rect(sf::Vector2f(cb.width, cb.height));
+		 rect.setFillColor(sf::Color::Transparent);
+		 rect.setOutlineColor(sf::Color::Red);
+		 rect.setOutlineThickness(1.0f);
+		 rect.setPosition(cb.left, cb.top);*/
 
 		target.draw(**it, rs);
 		//target.draw(rect, rs);

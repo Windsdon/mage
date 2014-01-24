@@ -24,6 +24,7 @@
  */
 #include "Entity.h"
 #include "World.h"
+#include "Physics.h"
 
 Entity::~Entity() {
 }
@@ -46,4 +47,8 @@ void Entity::onDestory() {
 }
 
 Entity::Entity(World* world, float x, float y, float width, float height): world(world), cb(x - width/2, y - height/2, width, height) {
+}
+
+sf::Vector2f Entity::getVisualCentre() {
+	return Physics::getCentre(getCollisionBox());
 }

@@ -28,6 +28,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "World.h"
+#include "Entity.h"
 
 class RenderingLayer {
 	public:
@@ -76,6 +77,12 @@ class Renderer {
 
 		sf::FloatRect &getCamera();
 
+		/*
+		 * Note: this requires a World to be set.
+		 */
+		void cameraTrackEntity(Entity*);
+		void updateCamera();
+
 	private:
 		sf::RenderWindow *window;
 		std::vector<RenderingLayer*> layers;
@@ -83,6 +90,8 @@ class Renderer {
 		World *world;
 		unsigned int worldLayer;
 		sf::FloatRect camera;
+
+		Entity* track;
 
 };
 

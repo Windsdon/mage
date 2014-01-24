@@ -49,6 +49,8 @@ class Entity: public PhysicsObject {
 		 */
 		virtual void onDestory();
 
+		virtual sf::Vector2f getVisualCentre();
+
 	protected:
 		sf::FloatRect cb;
 

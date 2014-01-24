@@ -27,7 +27,8 @@
 #include "Logger.h"
 #include "Babel.h"
 
-Renderer::Renderer(sf::VideoMode videoMode): world(NULL), worldLayer(0) {
+Renderer::Renderer(sf::VideoMode videoMode)
+		: world(NULL), worldLayer(0), track(NULL) {
 	window = new sf::RenderWindow(videoMode, Babel::get("game.name"), sf::Style::Close);
 }
 
@@ -80,7 +81,7 @@ void Renderer::render() const {
 		}
 		if ((*it)->isActive()) {
 			(*it)->render(window);
-			if((*it)->getNumber() == worldLayer && world != NULL){
+			if ((*it)->getNumber() == worldLayer && world != NULL) {
 				world->draw(*window, camera);
 			}
 		}
@@ -149,4 +150,37 @@ void RenderingLayer::setName(const std::string& name) {
 
 sf::FloatRect &Renderer::getCamera() {
 	return camera;
+}
+
+void Renderer::cameraTrackEntity(Entity* e) {
+	track = e;
+}
+
+void Renderer::updateCamera() {
+	if (track != NULL) {
+		sf::Vector2f centre = track->getVisualCentre();
+		camera.left = centre.x - camera.width / 2;
+		camera.top = centre.y - camera.height / 2;
+
+		//cout << "Camera: " << camera.left << ", " << camera.top << ", " << camera.width << ", " << camera.height << endl;
+
+		if (camera.left < 0) {
+			camera.left = 0;
+		}
+		if (camera.top < 0) {
+			camera.top = 0;
+		}
+
+		if (world != NULL) {
+			//cout << "World size: " << world->getPixelWidth() << ", " << world->getPixelHeight() << endl;
+			if (camera.left + camera.width > world->getPixelWidth()) {
+				camera.left = world->getPixelWidth() - camera.width;
+			}
+			if (camera.top + camera.height > world->getPixelHeight()) {
+				camera.top = world->getPixelHeight() - camera.height;
+			}
+		}
+	}
+
+	//cout << "Camera updated to " << camera.left << ", " << camera.top << ", " << camera.width << ", " << camera.height << endl;
 }

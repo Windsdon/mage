@@ -39,7 +39,7 @@ class Physics {
 		static float vecSize(sf::Vector2f &v);
 		static float vecSize2(sf::Vector2f &v);
 		static sf::Vector2f normalize(sf::Vector2f &v);
-		static sf::Vector2f getCentre(sf::FloatRect &r);
+		static sf::Vector2f getCentre(const sf::FloatRect &r);
 		static float accInt(float a, float v, float dt);
 		static bool lineIntersect(sf::Vector2f p0, sf::Vector2f p1, sf::Vector2f q0, sf::Vector2f q1, float &sr);
 		static sf::Vector2f getPoint(sf::FloatRect &rect, int i);

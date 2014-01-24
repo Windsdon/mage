@@ -103,12 +103,14 @@ void Game::loop() {
 		if (complete == 1) {
 			state = State::Running; //for testing
 
+			renderer.getWindow()->setIcon(32, 32, static_cast<ResourceImage*>(ResourceLoader::get("image.game.icon"))->getPixelsPtr());
+
 			renderer.removeObject(loadingScreen, 0);
 
 			//renderer.addObject(new sf::Sprite(*static_cast<ResourceTexture*>(ResourceLoader::get("texture.gui.menuBackground"))), 0);
 
 			world = new World(32);
-			world->setSize(200, 200);
+			world->setSize(50, 50);
 			world->setViewSize(1280, 720);
 
 			sf::FloatRect &camera = renderer.getCamera();
@@ -125,6 +127,7 @@ void Game::loop() {
 			world->addEntity(player);
 
 			renderer.setWorld(world, 1);
+			renderer.cameraTrackEntity(player);
 
 		}
 	}
@@ -155,11 +158,13 @@ void Game::loop() {
 		world->tick();
 	}
 
+	renderer.updateCamera();
 	renderer.render();
 }
 
 void Game::load() {
 	ResourceList list;
+	list.push_back(new ResourceImage("image.game.icon", "res/icon.png"));
 	list.push_back(new ResourceImage("image.gui.menuBackground", "res/gui/menuBackground.png"));
 	list.push_back(new ResourceTexture("texture.gui.menuBackground", "image.gui.menuBackground"));
 	list.push_back(new ResourceImage("image.tile.stone", "res/tile/stone.png"));
