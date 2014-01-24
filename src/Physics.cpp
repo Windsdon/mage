@@ -29,7 +29,7 @@
 using namespace std;
 
 const float Physics::RepulsionCoef = 3000.0f;
-const float Physics::MaximumTimeStep =  0.01f;
+const float Physics::MaximumTimeStep = 0.01f;
 
 /*
  * this function assumes that there is no residual forces from last iteration
@@ -38,7 +38,7 @@ const float Physics::MaximumTimeStep =  0.01f;
  * Friction is calculated here.
  */
 void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
-	while(dt > Physics::MaximumTimeStep){
+	while (dt > Physics::MaximumTimeStep) {
 		dt -= Physics::MaximumTimeStep;
 		calculate(list, Physics::MaximumTimeStep);
 	}
@@ -134,7 +134,7 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 				if (d.x > 0) {
 					extra = r1.left + r1.width - r2.left;
 					d.x -= extra;
-				} else {
+				} else if (d.x != 0) {
 					extra = r1.left - r2.left - r2.width;
 					d.x -= extra;
 				}
@@ -143,12 +143,12 @@ void Physics::calculate(vector<PhysicsObject*> &list, float dt) {
 			r1 = o1->getCollisionBox();
 			r1.top += d.y;
 
-			if (r1.intersects(r2)) {
+			if (r1.intersects(r2) && abs(r1.left + r1.width - r2.left) > 0.002) {
 				collidesY = true;
 				if (d.y > 0) {
 					extra = r1.top + r1.height - r2.top;
 					d.y -= extra;
-				} else {
+				} else if (d.y != 0) {
 					extra = r1.top - r2.top - r2.height;
 					d.y -= extra;
 				}
